@@ -12,6 +12,11 @@ server:
     enabled: true
     ingressClassName: nginx
     tls: true
+    hosts:
+      - host: localhost
+        paths:
+          - path: /
+            pathType: Prefix
 
 repoServer:
   replicas: 1
