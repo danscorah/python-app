@@ -6,6 +6,12 @@ controller:
 
 server:
   replicas: 1
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    enabled: true
+    ingressClassName: nginx
+    tls: true
 
 repoServer:
   replicas: 1
@@ -14,15 +20,7 @@ applicationSet:
   replicas: 1
 
 global:
-  domain: argocd.test.com
+  domain: localhost
 
 certificate:
   enabled: true
-
-server:
-  ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    enabled: true
-    ingressClassName: nginx
-    tls: true
