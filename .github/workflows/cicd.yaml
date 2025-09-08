@@ -58,6 +58,27 @@ jobs:
           chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
 
+      - name: Install kubectl
+        shell: bash
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Configure kubectl
+        shell: bash
+        run: |
+          # Copy kubeconfig from the host (assuming it's mounted or accessible)
+          mkdir -p ~/.kube
+          # Try to get kubeconfig from the host system
+          if [ -f /host/.kube/config ]; then
+            cp /host/.kube/config ~/.kube/config
+          else
+            # Fallback: try to connect to kind cluster
+            kind get kubeconfig --name kind > ~/.kube/config
+          fi
+          kubectl cluster-info
+
       - name: Check ArgoCD server
         shell: bash
         run: |
