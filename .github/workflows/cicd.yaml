@@ -61,8 +61,8 @@ jobs:
           git remote -v
           git add .
           git commit -m "Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}"
-          # Set the remote URL with token
-          git remote set-url origin https://danscorah:${PAT_TOKEN}@github.com/danscorah/python-app.git
+          # Set the remote URL with token as username
+          git remote set-url origin https://${PAT_TOKEN}@github.com/danscorah/python-app.git
           echo "New remote URL:"
           git remote -v
           git push origin main
