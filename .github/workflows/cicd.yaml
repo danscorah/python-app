@@ -54,11 +54,18 @@ jobs:
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
-      - name: Commit and push changes
+      - name: Debug and commit changes
         run: |
+          echo "Token length: ${#PAT_TOKEN}"
+          echo "Current remote URL:"
+          git remote -v
           git add .
           git commit -m "Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}"
-          git push https://danscorah:${PAT_TOKEN}@github.com/danscorah/python-app.git main
+          # Set the remote URL with token
+          git remote set-url origin https://danscorah:${PAT_TOKEN}@github.com/danscorah/python-app.git
+          echo "New remote URL:"
+          git remote -v
+          git push origin main
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
