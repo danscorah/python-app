@@ -68,16 +68,16 @@ jobs:
       - name: Configure kubectl
         shell: bash
         run: |
-          # Copy kubeconfig from the host (assuming it's mounted or accessible)
-          mkdir -p ~/.kube
-          # Try to get kubeconfig from the host system
-          if [ -f /host/.kube/config ]; then
-            cp /host/.kube/config ~/.kube/config
+          # The kubeconfig should already be mounted at /home/runner/.kube/config
+          # Just verify it exists and test connectivity
+          if [ -f ~/.kube/config ]; then
+            echo "Kubeconfig found at ~/.kube/config"
+            kubectl cluster-info
           else
-            # Fallback: try to connect to kind cluster
-            kind get kubeconfig --name kind > ~/.kube/config
+            echo "Kubeconfig not found at ~/.kube/config"
+            ls -la ~/.kube/
+            exit 1
           fi
-          kubectl cluster-info
 
       - name: Check ArgoCD server
         shell: bash
