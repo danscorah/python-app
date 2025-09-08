@@ -58,7 +58,7 @@ jobs:
         run: |
           git add .
           git commit -m "Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}"
-          git push origin main
+          git push https://danscorah:${PAT_TOKEN}@github.com/danscorah/python-app.git main
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
