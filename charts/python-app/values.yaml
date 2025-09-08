@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: docker.io/danscorah/python-app
   pullPolicy: IfNotPresent
-  tag: "f7f180"
+  tag: "96738e"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
