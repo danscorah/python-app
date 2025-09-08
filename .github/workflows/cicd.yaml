@@ -57,35 +57,6 @@ jobs:
           curl -L -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
-
-      - name: Install kubectl
-        shell: bash
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Configure kubectl
-        shell: bash
-        run: |
-          # The kubeconfig should already be mounted at /home/runner/.kube/config
-          # Just verify it exists and test connectivity
-          if [ -f ~/.kube/config ]; then
-            echo "Kubeconfig found at ~/.kube/config"
-            kubectl cluster-info
-          else
-            echo "Kubeconfig not found at ~/.kube/config"
-            ls -la ~/.kube/
-            exit 1
-          fi
-
-      - name: Check ArgoCD server
-        shell: bash
-        run: |
-          echo "Checking if ArgoCD server is accessible..."
-          kubectl get pods -n argocd
-          kubectl get svc -n argocd
-
       - name: Argocd app sync
         shell: bash
         run: |
