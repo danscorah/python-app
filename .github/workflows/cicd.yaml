@@ -52,11 +52,18 @@ jobs:
           git config --global credential.helper store
           echo "https://danscorah:${{ secrets.PAT_TOKEN }}@github.com" > ~/.git-credentials
 
+      - name: Debug token
+        run: |
+          echo "Token length: ${#PAT_TOKEN}"
+          echo "First 10 chars: ${PAT_TOKEN:0:10}..."
+
       - name: Commit and push changes
         run: |
           git add .
           git commit -m "Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}"
           git push origin main
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Install argocd
         shell: bash
