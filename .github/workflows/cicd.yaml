@@ -45,12 +45,18 @@ jobs:
           pip install yq
           yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml
 
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: 'Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      - name: Configure git
+        run: |
+          git config --global user.name "danscorah"
+          git config --global user.email "danscorah@users.noreply.github.com"
+          git config --global credential.helper store
+          echo "https://danscorah:${{ secrets.PAT_TOKEN }}@github.com" > ~/.git-credentials
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}"
+          git push origin main
 
       - name: Install argocd
         shell: bash
