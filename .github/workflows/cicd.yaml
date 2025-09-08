@@ -50,7 +50,9 @@ jobs:
           git config --global user.name "danscorah"
           git config --global user.email "danscorah@users.noreply.github.com"
           git config --global credential.helper store
-          echo "https://danscorah:${{ secrets.PAT_TOKEN }}@github.com" > ~/.git-credentials
+          echo "https://danscorah:${PAT_TOKEN}@github.com" > ~/.git-credentials
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Commit and push changes
         run: |
