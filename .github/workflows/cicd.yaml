@@ -53,16 +53,31 @@ jobs:
       - name: Install argocd
         shell: bash
         run: |
-          curl -ksSL -o argocd https://argocd-server.argocd/download/argocd-linux-amd64
+          # Download ArgoCD CLI from GitHub releases
+          curl -L -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
           chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
+
+      - name: Check ArgoCD server
+        shell: bash
+        run: |
+          echo "Checking if ArgoCD server is accessible..."
+          kubectl get pods -n argocd
+          kubectl get svc -n argocd
 
       - name: Argocd app sync
         shell: bash
         run: |
-          argocd login argocd-server.argocd \
-            --insecure  \
+          # Get ArgoCD server URL from service
+          ARGOCD_SERVER=$(kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          if [ -z "$ARGOCD_SERVER" ]; then
+            ARGOCD_SERVER="localhost"
+          fi
+          echo "ArgoCD server: $ARGOCD_SERVER"
+          
+          argocd login $ARGOCD_SERVER \
+            --insecure \
             --grpc-web \
             --username admin \
-            --password  ${{ secrets.ARGOCD_PASSWORD }}
+            --password ${{ secrets.ARGOCD_PASSWORD }}
           argocd app sync python-app
